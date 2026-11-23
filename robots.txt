@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sao8-quiz.github.io/sitemap.xml
