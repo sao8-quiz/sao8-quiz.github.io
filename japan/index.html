@@ -3,7 +3,6 @@
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2HFKTQ0J86"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2HFKTQ0J86');</script>
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>都道府県地図クイズ｜47都道府県の場所を覚える無料ゲーム</title>
@@ -33,6 +32,7 @@
   --map-highlight:#b5472e;
   --map-tour-highlight:#2f8f52;
   --map-correct:#8fcaa6;
+  --correct-text:#1e7a44;
   --map-wrong:#b5472e;
   --hard-accent:#7a4fae;
   --hard-ink:#fff8f1;
@@ -49,7 +49,7 @@
     --bg:#1b1812; --surface:#252019; --surface-2:#2d271e; --ink:#f3ecdf;
     --ink-dim:#a89e8d; --line:#3c352a; --accent:#e0855f; --accent-ink:#1b1812;
     --study-accent:#7fb3d5; --study-ink:#1b1812; --map-fill:#3a3327;
-    --map-stroke:#1b1812; --map-highlight:#e0855f; --map-tour-highlight:#5fcf86; --map-correct:#8fd4ab;
+    --map-stroke:#1b1812; --map-highlight:#e0855f; --map-tour-highlight:#5fcf86; --map-correct:#8fd4ab; --correct-text:#4cc27a;
     --map-wrong:#e0855f; --hard-accent:#b98fe0; --hard-ink:#1b1812;
     --capital-accent:#4fc79b; --capital-ink:#1b1812;
     --choice-bg:#252019; --choice-border:#3c352a; --choice-hover:#2d271e;
@@ -60,7 +60,7 @@
   --bg:#1b1812; --surface:#252019; --surface-2:#2d271e; --ink:#f3ecdf;
   --ink-dim:#a89e8d; --line:#3c352a; --accent:#e0855f; --accent-ink:#1b1812;
   --study-accent:#7fb3d5; --study-ink:#1b1812; --map-fill:#3a3327;
-  --map-stroke:#1b1812; --map-highlight:#e0855f; --map-tour-highlight:#5fcf86; --map-correct:#8fd4ab;
+  --map-stroke:#1b1812; --map-highlight:#e0855f; --map-tour-highlight:#5fcf86; --map-correct:#8fd4ab; --correct-text:#4cc27a;
   --map-wrong:#e0855f; --hard-accent:#b98fe0; --hard-ink:#1b1812;
   --capital-accent:#4fc79b; --capital-ink:#1b1812;
   --choice-bg:#252019; --choice-border:#3c352a; --choice-hover:#2d271e;
@@ -189,15 +189,26 @@ h1,h2,h3{margin:0}
 .map-instruction{
   align-self:center; display:inline-block; max-width:100%; margin-top:4px;
   padding:4px 16px; border-radius:999px;
-  border:1px solid color-mix(in srgb, var(--hard-accent) 45%, var(--choice-border));
-  background:color-mix(in srgb, var(--hard-accent) 14%, var(--surface));
-  color:var(--hard-accent); text-align:center; font-size:1.31rem; font-weight:700;
+  border:1px solid var(--choice-border);
+  background:var(--choice-bg);
+  color:var(--choice-ink); text-align:center; font-size:1.57rem; font-weight:700;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .map-instruction:empty{ display:none; }
+/* 逆引き各レベルの開始時に、そのレベルのルールを4.5秒表示（2026-11-22 全米版から） */
+.level-rule{
+  position:absolute; left:50%; top:50%; z-index:6; transform:translate(-50%,-50%) scale(.92);
+  max-width:92%; padding:10px 18px; border-radius:14px; text-align:center; pointer-events:none;
+  background:color-mix(in srgb, var(--surface) 94%, transparent); border:1.5px solid var(--choice-border);
+  box-shadow:0 6px 20px rgba(0,0,0,.22); color:var(--ink);
+  opacity:0; transition:opacity .35s ease, transform .35s ease;
+}
+.level-rule.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+.level-rule .lr-title{ font-size:1.05rem; font-weight:800; color:var(--hard-accent); margin-bottom:3px; }
+.level-rule .lr-line{ font-size:0.86rem; font-weight:700; line-height:1.5; white-space:nowrap; }
 /* 県名＋かな／ローマ字が長くて収まらないとき用に、かな・ローマ字部分だけ
    小さいフォントサイズにする（県庁所在地のみの表示や、はみ出さない場合は影響なし） */
-.map-instruction .reading{ font-size:0.92rem; font-weight:700; }
+.map-instruction .reading{ font-size:0.7em; font-weight:700; color:var(--ink-dim); }
 .tour-comment{
   margin-top:4px; padding:4px 10px; font-size:1.18rem; font-weight:700; line-height:1.4;
   color:var(--ink); text-align:center;
@@ -233,7 +244,9 @@ svg.jpmap{ width:100%; max-width:100%; height:auto; max-height:100%; display:blo
 :root[data-theme="dark"] .pref.fourcolor-1{ fill:#e8d27a; }
 :root[data-theme="dark"] .pref.fourcolor-2{ fill:#7fb3d5; }
 :root[data-theme="dark"] .pref.fourcolor-3{ fill:#6fcf97; }
-.pref.hint-outline{ stroke:var(--hard-accent); stroke-width:2.2; fill:color-mix(in srgb, var(--hard-accent) 12%, var(--map-fill)); }
+/* 逆引きLv.1のヒント：通常の出題と同じ赤で点滅（2026-11-22 全米版から） */
+.pref.hint-outline{ fill:var(--map-highlight); animation:pulse 1.6s ease-in-out infinite; }
+.pref.hint-outline.pop{ animation:pref-pop 480ms ease-out, pulse 1.6s ease-in-out 480ms infinite; }
 .pref.block-dim{ opacity:0.28; }
 .pref.silhouette-hidden{ opacity:0; pointer-events:none; }
 .pref.silhouette-shape{ fill:var(--ink); stroke:none; }
@@ -277,7 +290,7 @@ svg.jpmap{ width:100%; max-width:100%; height:auto; max-height:100%; display:blo
 .feedback{ display:none; background:var(--surface-2); border-radius:12px; padding:6px 10px; gap:2px; flex-direction:column; flex-shrink:0; }
 .feedback.show{ display:flex; }
 .feedback .verdict{ font-size:0.9rem; font-weight:700; line-height:1.25; }
-.feedback.is-correct .verdict{ color:var(--map-correct); }
+.feedback.is-correct .verdict{ color:var(--correct-text, #1e7a44); }
 .feedback.is-wrong .verdict{ color:var(--map-wrong); }
 .feedback .meta{ font-size:0.68rem; color:var(--ink-dim); line-height:1.3; }
 .feedback .fact{ font-size:1.1rem; line-height:1.4; color:var(--ink); margin-top:3px; }
@@ -448,7 +461,7 @@ svg.jpmap{ width:100%; max-width:100%; height:auto; max-height:100%; display:blo
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .map-verdict[hidden]{ display:none; }
-.map-verdict.correct{ color:var(--map-correct); }
+.map-verdict.correct{ color:var(--correct-text, #1e7a44); }
 .map-verdict.wrong{ color:var(--map-wrong); }
 .map-verdict.correct{ font-size:1.3rem; padding:4px 16px; }
 @keyframes verdict-pop{ 0%{transform:scale(.3);opacity:0} 45%{transform:scale(1.45);opacity:1} 72%{transform:scale(.94)} 100%{transform:scale(1)} }
@@ -583,6 +596,7 @@ svg.jpmap{ width:100%; max-width:100%; height:auto; max-height:100%; display:blo
       <div class="map-verdict" id="mapVerdict" hidden></div>
       <div class="flag-badge" id="flagBadge"></div>
       <div class="flag-question" id="flagQuestion"></div>
+      <div class="level-rule" id="levelRule" aria-live="polite"></div>
       <div class="map-credit">地図: <a href="https://github.com/geolonia/japanese-prefectures" target="_blank" rel="noopener">geolonia</a>（Wikipedia, GFDL）<br>県旗: <a href="https://commons.wikimedia.org/wiki/Flags_of_Japanese_prefectures" target="_blank" rel="noopener">Commons</a></div>
     </div>
     <div class="map-instruction" id="mapInstruction"></div>
@@ -3049,7 +3063,7 @@ var TRIVIA_DATA = {
   var BOOTH_URL = "https://sao8.booth.pm/items/9101123";
   var LOCKED_MODES = [
     "capitalRandom", "capitalKana", "capitalWeak", "capitalReverse",
-    "kana", "weak", "autoTour",
+    "kana", "weak",
     "reverseBlock", "reverseMid", "reverse"
   ];
   function isLockedMode(mode) {
@@ -3787,6 +3801,7 @@ var TRIVIA_DATA = {
       } else {
         els.mapInstruction.innerHTML = target.name + '<span class="reading">（' + target.kana + "／" + target.romaji + "）</span>";
       }
+      fitMapInstruction();
       els.zoomToggle.hidden = false;
       if (game.mode === "reverseEasy" && el) el.classList.add("hint-outline");
       if (game.mode === "reverseBlock") {
@@ -4312,8 +4327,36 @@ var TRIVIA_DATA = {
     els.svg.appendChild(g);
     return g;
   }
+  // 名前の札が長くて切れるときだけ、文字を少しずつ小さくして収める
+  function fitMapInstruction() {
+    var e = els.mapInstruction; if (!e) return;
+    e.style.fontSize = "";
+    var size = 1.57;
+    while (e.scrollWidth > e.clientWidth + 1 && size > 1.0) { size -= 0.05; e.style.fontSize = size.toFixed(2) + "rem"; }
+  }
+  // 逆引きの各レベルを始めたとき、そのレベルのルールを4.5秒だけ表示する
+  var LEVEL_RULES = {
+    reverseEasy:  ["Lv.1", ["探す都道府県が赤く光ります", "間違えても何度でもやり直せます"]],
+    reverseBlock: ["Lv.2", ["近くの3〜4都道府県の中から探します", "間違えても何度でもやり直せます"]],
+    reverseMid:   ["Lv.3", ["ヒントなし・日本全体から探します", "間違えても何度でもやり直せます"]],
+    reverse:      ["Lv.4", ["ヒントなし・日本全体から探します", "タップは1回きり！"]]
+  };
+  var levelRuleTimer = null;
+  function showLevelRule() {
+    var box = document.getElementById("levelRule"); if (!box) return;
+    clearTimeout(levelRuleTimer);
+    box.classList.remove("show");
+    var r = game && LEVEL_RULES[game.mode];
+    if (!r || autoTourState.active) return;
+    box.innerHTML = '<div class="lr-title">' + r[0] + '</div>' +
+      r[1].map(function (s) { return '<div class="lr-line">' + s + '</div>'; }).join("");
+    requestAnimationFrame(function () { box.classList.add("show"); });
+    levelRuleTimer = setTimeout(function () { box.classList.remove("show"); }, 4500);
+  }
+
   // 各モードの開始時に3秒だけ表示して消す
   function showGeoLabels() {
+    showLevelRule();
     var g = ensureGeoLabels(); if (!g) return;
     clearTimeout(geoLabelTimer);
     g.classList.remove("show");
