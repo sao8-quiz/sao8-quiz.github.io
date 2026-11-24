@@ -3,7 +3,6 @@
 <head>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2HFKTQ0J86"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2HFKTQ0J86');</script>
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>中東地図クイズ｜中東・北アフリカ20ヶ国の場所を覚える無料ゲーム</title>
@@ -33,6 +32,7 @@
   --map-highlight:#b5472e;
   --map-correct:#8fcaa6;
   --text-correct:#2e6b45;
+  --correct-text:#1e7a44;
   --map-wrong:#b5472e;
   --hard-accent:#7a4fae;
   --hard-ink:#fff8f1;
@@ -53,6 +53,7 @@
     --study-accent:#7fb3d5; --study-ink:#1b1812; --map-fill:#3a3327;
     --map-stroke:#1b1812; --map-highlight:#e0855f; --map-correct:#8fd4ab;
     --text-correct:#8fd4ab;
+    --correct-text:#4cc27a;
     --map-wrong:#e0855f; --hard-accent:#b98fe0; --hard-ink:#1b1812;
     --choice-bg:#252019; --choice-border:#3c352a; --choice-hover:#2d271e;
     --choice-ink:#fffcf8;
@@ -66,6 +67,7 @@
   --study-accent:#7fb3d5; --study-ink:#1b1812; --map-fill:#3a3327;
   --map-stroke:#1b1812; --map-highlight:#e0855f; --map-correct:#8fd4ab;
   --text-correct:#8fd4ab;
+  --correct-text:#4cc27a;
   --map-wrong:#e0855f; --hard-accent:#b98fe0; --hard-ink:#1b1812;
   --choice-bg:#252019; --choice-border:#3c352a; --choice-hover:#2d271e;
   --choice-ink:#fffcf8;
@@ -190,9 +192,9 @@ h1,h2,h3{margin:0}
   position:absolute; bottom:52px; right:10px; z-index:3;
   display:inline-block; max-width:55%;
   padding:4px 16px; border-radius:999px;
-  border:1px solid color-mix(in srgb, var(--hard-accent) 45%, var(--choice-border));
-  background:color-mix(in srgb, var(--hard-accent) 14%, var(--surface));
-  color:var(--hard-accent); text-align:center; font-size:0.96rem; font-weight:700;
+  border:1px solid var(--choice-border);
+  background:var(--choice-bg);
+  color:var(--choice-ink); text-align:center; font-size:1.15rem; font-weight:700;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   box-shadow:0 1px 6px color-mix(in srgb, var(--ink) 20%, transparent);
 }
@@ -206,7 +208,18 @@ body:has(#tourControls.show) #mapZoomLayer .equator{ display:inline; }
 .country.island.silhouette-shape, .country.island.silhouette-hidden{ opacity:0; pointer-events:none; }
 #mapZoomLayer:has(.silhouette-shape) .inset-frame, #mapZoomLayer:has(.silhouette-shape) .inset-label, #mapZoomLayer:has(.silhouette-shape) .country.island{ display:none; }
 .map-instruction:empty{ display:none; }
-.map-instruction .reading{ font-size:0.86rem; font-weight:700; }
+/* 逆引き各レベルの開始時に、そのレベルのルールを4.5秒表示（2026-11-22 全米版から） */
+.level-rule{
+  position:absolute; left:50%; top:50%; z-index:6; transform:translate(-50%,-50%) scale(.92);
+  max-width:92%; padding:10px 18px; border-radius:14px; text-align:center; pointer-events:none;
+  background:color-mix(in srgb, var(--surface) 94%, transparent); border:1.5px solid var(--choice-border);
+  box-shadow:0 6px 20px rgba(0,0,0,.22); color:var(--ink);
+  opacity:0; transition:opacity .35s ease, transform .35s ease;
+}
+.level-rule.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+.level-rule .lr-title{ font-size:1.05rem; font-weight:800; color:var(--hard-accent); margin-bottom:3px; }
+.level-rule .lr-line{ font-size:0.86rem; font-weight:700; line-height:1.5; white-space:nowrap; }
+.map-instruction .reading{ font-size:0.9em; font-weight:700; color:var(--ink-dim); }
 svg.worldmap{ width:auto; max-width:100%; height:100%; max-height:100%; display:block; overflow:hidden; }
 svg.worldmap.zoomed{ overflow:hidden; }
 .country{ fill:var(--map-fill); stroke:var(--map-stroke); stroke-width:0.6; vector-effect:non-scaling-stroke; transition:fill .22s ease; cursor:pointer; }
@@ -214,7 +227,9 @@ svg.worldmap.zoomed{ overflow:hidden; }
 .country.done-correct{ fill:var(--map-correct); }
 .country.wrong-flash{ fill:var(--map-wrong); }
 .country.active{ fill:var(--map-highlight); animation:pulse 1.6s ease-in-out infinite; }
-.country.hint-outline{ stroke:var(--hard-accent); stroke-width:1.4; fill:color-mix(in srgb, var(--hard-accent) 12%, var(--map-fill)); }
+/* 逆引きLv.1のヒント：通常の出題と同じ赤で点滅（2026-11-22 全米版から） */
+.country.hint-outline{ fill:var(--map-highlight); animation:pulse 1.6s ease-in-out infinite; }
+.country.hint-outline.pop{ animation:c-pop 480ms ease-out, pulse 1.6s ease-in-out 480ms infinite; }
 .country.block-dim{ opacity:0.28; }
 .country.silhouette-hidden{ opacity:0; pointer-events:none; }
 .country.silhouette-shape{ fill:var(--ink); stroke:none; }
@@ -240,7 +255,7 @@ svg.worldmap.zoomed{ overflow:hidden; }
 .feedback{ display:none; background:var(--surface-2); border-radius:12px; padding:6px 10px; gap:2px; flex-direction:column; flex-shrink:0; }
 .feedback.show{ display:flex; }
 .feedback .verdict{ font-size:0.9rem; font-weight:700; line-height:1.25; }
-.feedback.is-correct .verdict{ color:var(--text-correct); }
+.feedback.is-correct .verdict{ color:var(--correct-text, #1e7a44); }
 .feedback.is-wrong .verdict{ color:var(--map-wrong); }
 .feedback .meta{ font-size:0.68rem; color:var(--ink-dim); line-height:1.3; }
 .verdict.bounce{ animation:verdict-bounce 520ms cubic-bezier(.34,1.56,.64,1); }
@@ -489,6 +504,7 @@ button,select,.mode-row,.tour-controls,.header,.map-stage{ -webkit-user-select:n
       <button class="next-btn" id="nextBtn">つぎへ →</button>
       <div class="tour-legend" id="tourLegend"><span><i style="background:var(--study-accent)"></i>対象</span><span><i style="background:#f0a040"></i>隣の国</span></div>
       <div class="map-instruction" id="mapInstruction"></div>
+      <div class="level-rule" id="levelRule" aria-live="polite"></div>
     </div>
   </div>
 
@@ -575,7 +591,7 @@ var JAPAN_OVERLAY_DATA = {"d":"M676.08,320.41L675.34,321.18L673.85,320.92L672.98
 // ---------- 体験版/購入版ビルド分岐 ----------
 var TRIAL_BUILD = true;
 var BOOTH_URL = "https://sao8.booth.pm/";
-var LOCKED_MODES = ["alpha","weak","autoTour","reverseBlock","reverseMid","reverse"];
+var LOCKED_MODES = ["alpha","weak","reverseBlock","reverseMid","reverse"];
 function isLockedMode(mode){ return TRIAL_BUILD && LOCKED_MODES.indexOf(mode) !== -1; }
 function openTrialLock(){
   var ov = document.getElementById("trialLockOverlay");
@@ -1357,6 +1373,7 @@ function renderRound(){
   if(isReverseMode(game.mode)){
     els.choices.innerHTML = "";
     els.mapInstruction.innerHTML = info.name + '<br><span class="reading">'+info.romaji+'</span>';
+    fitMapInstruction();
     pathEls[code] && pathEls[code].classList.add("pop");
     bringToFront(code);
     if(game.mode === "reverseEasy"){
@@ -1899,7 +1916,33 @@ function ensureGeoLabels(){
     els.zoomLayer.appendChild(t);
   });
 }
+// 国名の札が長くて切れるときだけ、文字を少しずつ小さくして収める
+function fitMapInstruction(){
+  var e = els.mapInstruction; if(!e) return;
+  e.style.fontSize = "";
+  var size = 1.15;
+  while(e.scrollWidth > e.clientWidth + 1 && size > 0.8){ size -= 0.05; e.style.fontSize = size.toFixed(2) + "rem"; }
+}
+var LEVEL_RULES = {
+  reverseEasy:  ["Lv.1", ["探す国が赤く光ります", "間違えても何度でもやり直せます"]],
+  reverseBlock: ["Lv.2", ["同じ地域の数か国の中から探します", "間違えても何度でもやり直せます"]],
+  reverseMid:   ["Lv.3", ["ヒントなし・地図全体から探します", "間違えても何度でもやり直せます"]],
+  reverse:      ["Lv.4", ["ヒントなし・地図全体から探します", "タップは1回きり！"]]
+};
+var levelRuleTimer = null;
+function showLevelRule(){
+  var box = document.getElementById("levelRule"); if(!box) return;
+  clearTimeout(levelRuleTimer);
+  box.classList.remove("show");
+  var r = game && LEVEL_RULES[game.mode];
+  if(!r || autoTourActive) return;
+  box.innerHTML = '<div class="lr-title">' + r[0] + '</div>' +
+    r[1].map(function(s){ return '<div class="lr-line">' + s + '</div>'; }).join("");
+  requestAnimationFrame(function(){ box.classList.add("show"); });
+  levelRuleTimer = setTimeout(function(){ box.classList.remove("show"); }, 4500);
+}
 function showGeoLabels(){
+  showLevelRule();
   ensureGeoLabels();
   clearTimeout(geoLabelTimer);
   if(currentZoom.on || autoTourActive){ geoLabelEls.forEach(function(t){ t.classList.remove("show"); }); return; }
@@ -2024,5 +2067,4 @@ mo.observe(ft,{childList:true,characterData:true,subtree:true});
 if(vt)mo.observe(vt,{childList:true,characterData:true,subtree:true});
 mo.observe(fb,{attributes:true,attributeFilter:["class"]});
 sync();})();</script>
-</body>
-</html>
+</body></html>
