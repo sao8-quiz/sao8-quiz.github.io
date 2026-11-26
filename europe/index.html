@@ -2060,5 +2060,45 @@ startMode("random", false);
 })();
 </script>
 
-<script>(function(){var b=document.getElementById('xShareBtn');if(!b)return;b.addEventListener('click',function(){var s=document.getElementById('finalScore')||document.getElementById('completeScore');var t=s?s.textContent:'';var m=t.match(/(\d+)\s*\/\s*(\d+)/);var app=(document.title.split('｜')[0]||'地図クイズ').trim();var c=document.querySelector('link[rel=canonical]');var url=c?c.href:location.href;var msg;if(m){msg=app+'で '+m[1]+'/'+m[2]+' 正解'+(m[1]===m[2]?'！全問正解🎉':'！');}else{msg=app+'で遊びました！';}msg+='\nブラウザで無料で遊べます\n#地図クイズ #地理';b.href='https://x.com/intent/tweet?text='+encodeURIComponent(msg)+'&url='+encodeURIComponent(url);try{gtag('event','share',{method:'x',content_type:'quiz_result',item_id:app});}catch(e){}});})();</script>
+<script>(function(){
+var RM=['reverseEasy','reverseBlock','reverseMid','reverse'];
+var sel=document.getElementById('reverseRegionSelect');
+function canon(){var c=document.querySelector('link[rel=canonical]');return c?c.href:location.href.split('?')[0];}
+function curRegion(){
+  if(!sel||!sel.value||sel.value==='all')return null;
+  var a=document.querySelector('[data-mode].active');
+  if(a&&RM.indexOf(a.dataset.mode)===-1)return null;
+  var o=sel.options[sel.selectedIndex];
+  return {v:sel.value,t:(o?o.textContent:sel.value).trim()};
+}
+/* ?region=四国 で開いたら、その地域の逆引きLv.1から始める */
+try{
+  var q=new URLSearchParams(location.search).get('region');
+  if(q&&sel){
+    var ok=[].some.call(sel.options,function(o){return o.value===q;});
+    if(ok){setTimeout(function(){
+      var lv1=document.querySelector('[data-mode="reverseEasy"]');
+      if(lv1&&!lv1.classList.contains('active'))lv1.click();
+      setTimeout(function(){
+        if(sel.value!==q){sel.value=q;sel.dispatchEvent(new Event('change',{bubbles:true}));}
+        try{gtag('event','region_link',{region:q});}catch(e){}
+      },150);
+    },300);}
+  }
+}catch(e){}
+var b=document.getElementById('xShareBtn');if(!b)return;
+b.addEventListener('click',function(){
+  var s=document.getElementById('finalScore')||document.getElementById('completeScore');
+  var t=s?s.textContent:'';var m=t.match(/(\d+)\s*\/\s*(\d+)/);
+  var app=(document.title.split('｜')[0]||'地図クイズ').trim();
+  var r=curRegion();var url=canon();
+  var name=app+(r?'（'+r.t+'）':'');
+  if(r)url+='?region='+encodeURIComponent(r.v);
+  var msg=m?name+'で '+m[1]+'/'+m[2]+' 正解'+(m[1]===m[2]?'！全問正解🎉':'！'):name+'で遊びました！';
+  msg+=r?'\n同じ地域にブラウザで無料で挑戦できます':'\nブラウザで無料で遊べます';
+  msg+='\n#地図クイズ #地理';
+  b.href='https://x.com/intent/tweet?text='+encodeURIComponent(msg)+'&url='+encodeURIComponent(url);
+  try{gtag('event','share',{method:'x',content_type:'quiz_result',item_id:app+(r?'_'+r.v:'')});}catch(e){}
+});
+})();</script>
 </body></html>
