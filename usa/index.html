@@ -17,6 +17,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<style>.x-share-btn{display:inline-block;margin:10px auto 4px;padding:9px 20px;border-radius:999px;background:#000;color:#fff!important;font-weight:700;text-decoration:none;font-size:.95rem}.x-share-btn:hover{opacity:.85}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .x-share-btn{background:#fff;color:#000!important}}</style>
 </head>
 <body>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1457,6 +1458,7 @@ svg.usmap.zoomed{ overflow:hidden; }
       <button class="restart-btn" id="restartBtn" type="button">もう一度挑戦する</button>
       <button class="region-nav-btn" id="nextRegionBtn" type="button" hidden>次の地域 →</button>
     </div>
+    <a class="x-share-btn" id="xShareBtn" href="https://x.com/intent/tweet" target="_blank" rel="noopener">𝕏 結果をシェア</a>
     <a class="support-link" href="https://ofuse.me/a97d1286" target="_blank" rel="noopener noreferrer">☕ 制作者を応援する（Ofuse）</a>
   </div>
 </div>
@@ -3833,5 +3835,6 @@ svg.usmap.zoomed{ overflow:hidden; }
   }
 })();
 </script>
+<script>(function(){var b=document.getElementById('xShareBtn');if(!b)return;b.addEventListener('click',function(){var s=document.getElementById('finalScore')||document.getElementById('completeScore');var t=s?s.textContent:'';var m=t.match(/(\d+)\s*\/\s*(\d+)/);var app=(document.title.split('｜')[0]||'地図クイズ').trim();var c=document.querySelector('link[rel=canonical]');var url=c?c.href:location.href;var msg;if(m){msg=app+'で '+m[1]+'/'+m[2]+' 正解'+(m[1]===m[2]?'！全問正解🎉':'！');}else{msg=app+'で遊びました！';}msg+='\nブラウザで無料で遊べます\n#地図クイズ #地理';b.href='https://x.com/intent/tweet?text='+encodeURIComponent(msg)+'&url='+encodeURIComponent(url);try{gtag('event','share',{method:'x',content_type:'quiz_result',item_id:app});}catch(e){}});})();</script>
 </body>
 </html>

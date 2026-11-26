@@ -443,6 +443,7 @@ button,select,.mode-row,.tour-controls,.header,.map-stage{ -webkit-user-select:n
 .complete-detail{ font-size:0.86rem; color:var(--ink-dim); line-height:1.6; }
 .complete-detail .best{ color:var(--hard-accent); font-weight:700; }
 </style>
+<style>.x-share-btn{display:inline-block;margin:10px auto 4px;padding:9px 20px;border-radius:999px;background:#000;color:#fff!important;font-weight:700;text-decoration:none;font-size:.95rem}.x-share-btn:hover{opacity:.85}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .x-share-btn{background:#fff;color:#000!important}}</style>
 </head>
 <body>
 <div class="wrap" id="wrap">
@@ -534,6 +535,7 @@ button,select,.mode-row,.tour-controls,.header,.map-stage{ -webkit-user-select:n
       <button class="restart-btn" id="restartBtn">もう一度</button>
       <button class="region-nav-btn" id="nextRegionBtn" hidden>次の地域 →</button>
     </div>
+    <a class="x-share-btn" id="xShareBtn" href="https://x.com/intent/tweet" target="_blank" rel="noopener">𝕏 結果をシェア</a>
     <div class="support-note">楽しんでいただけたら、よろしければ応援もお待ちしています。<br><a href="https://ofuse.me/a97d1286" target="_blank" rel="noopener">🎁 Ofuseで応援する</a></div>
   </div>
 </div>
@@ -2056,4 +2058,5 @@ startMode("random", false);
 </script>
 
 <script>(function(){document.querySelectorAll("#mapZoomLayer path.island").forEach(function(isl){var main=[].slice.call(document.querySelectorAll("#mapZoomLayer path.country[data-code=\""+isl.getAttribute("data-code")+"\"]")).filter(function(e){return !e.classList.contains("island");})[0];if(!main)return;var sync=function(){isl.setAttribute("class",main.getAttribute("class")+" island");};sync();new MutationObserver(sync).observe(main,{attributes:true,attributeFilter:["class"]});});})();</script>
+<script>(function(){var b=document.getElementById('xShareBtn');if(!b)return;b.addEventListener('click',function(){var s=document.getElementById('finalScore')||document.getElementById('completeScore');var t=s?s.textContent:'';var m=t.match(/(\d+)\s*\/\s*(\d+)/);var app=(document.title.split('｜')[0]||'地図クイズ').trim();var c=document.querySelector('link[rel=canonical]');var url=c?c.href:location.href;var msg;if(m){msg=app+'で '+m[1]+'/'+m[2]+' 正解'+(m[1]===m[2]?'！全問正解🎉':'！');}else{msg=app+'で遊びました！';}msg+='\nブラウザで無料で遊べます\n#地図クイズ #地理';b.href='https://x.com/intent/tweet?text='+encodeURIComponent(msg)+'&url='+encodeURIComponent(url);try{gtag('event','share',{method:'x',content_type:'quiz_result',item_id:app});}catch(e){}});})();</script>
 </body></html>

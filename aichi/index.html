@@ -199,6 +199,7 @@ details.ency-muni>summary{cursor:pointer;font-size:0.92rem;font-weight:700;paddi
 .emblem-pin circle{fill:#fff;stroke:rgba(0,0,0,.35)}
 @media (max-width:380px){ #rowQuiz .mode-btn{padding:4px 6px;font-size:0.64rem} }
 </style>
+<style>.x-share-btn{display:inline-block;margin:10px auto 4px;padding:9px 20px;border-radius:999px;background:#000;color:#fff!important;font-weight:700;text-decoration:none;font-size:.95rem}.x-share-btn:hover{opacity:.85}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .x-share-btn{background:#fff;color:#000!important}}</style>
 </head>
 <body data-theme="auto">
 <div class="wrap">
@@ -288,6 +289,7 @@ details.ency-muni>summary{cursor:pointer;font-size:0.92rem;font-weight:700;paddi
       <button id="retryBtn" class="primary">もう一度</button>
       <button id="regionNextBtn" class="hidden">次の地域 →</button>
     </div>
+    <a class="x-share-btn" id="xShareBtn" href="https://x.com/intent/tweet" target="_blank" rel="noopener">𝕏 結果をシェア</a>
     <a class="support-link" href="https://ofuse.me/a97d1286" target="_blank" rel="noopener">☕ 制作者を応援する（Ofuse）</a>
   </div>
 
@@ -1452,5 +1454,6 @@ updateMapStageCap();
 window.addEventListener("resize", updateMapStageCap);
 })();
 </script>
+<script>(function(){var b=document.getElementById('xShareBtn');if(!b)return;b.addEventListener('click',function(){var s=document.getElementById('finalScore')||document.getElementById('completeScore');var t=s?s.textContent:'';var m=t.match(/(\d+)\s*\/\s*(\d+)/);var app=(document.title.split('｜')[0]||'地図クイズ').trim();var c=document.querySelector('link[rel=canonical]');var url=c?c.href:location.href;var msg;if(m){msg=app+'で '+m[1]+'/'+m[2]+' 正解'+(m[1]===m[2]?'！全問正解🎉':'！');}else{msg=app+'で遊びました！';}msg+='\nブラウザで無料で遊べます\n#地図クイズ #地理';b.href='https://x.com/intent/tweet?text='+encodeURIComponent(msg)+'&url='+encodeURIComponent(url);try{gtag('event','share',{method:'x',content_type:'quiz_result',item_id:app});}catch(e){}});})();</script>
 </body>
 </html>
