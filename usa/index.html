@@ -3872,7 +3872,7 @@ b.addEventListener('click',function(){
   var msg=m?name+'で '+m[1]+'/'+m[2]+' 正解'+(m[1]===m[2]?'！全問正解🎉':'！'):name+'で遊びました！';
   msg+=r?'\n同じ地域にブラウザで無料で挑戦できます':'\nブラウザで無料で遊べます';
   msg+='\n#地図クイズ #地理';
-  b.href='https://x.com/intent/tweet?text='+encodeURIComponent(msg)+'&url='+encodeURIComponent(url);
+  b.href='https://x.com/intent/tweet?text='+encodeURIComponent(msg)+'&url='+encodeURIComponent(url)+'&via=sao830ih';
   try{gtag('event','share',{method:'x',content_type:'quiz_result',item_id:app+(r?'_'+r.v:'')});}catch(e){}
 });
 })();</script>
