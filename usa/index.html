@@ -1599,7 +1599,7 @@ svg.usmap.zoomed{ overflow:hidden; }
     var rr = localStorage.getItem('usq_reverse_region_v1');
     if (rr && DIVISIONS.some(function(d){ return d.key === rr; })) reverseRegion = rr;
   }catch(e){}
-  var lastRegionMode = 'reverse';
+  var lastRegionMode = TRIAL_BUILD ? 'reverseEasy' : 'reverse';
   function currentDivision(){
     for (var i=0;i<DIVISIONS.length;i++){ if (DIVISIONS[i].key === reverseRegion) return DIVISIONS[i]; }
     return null;
@@ -3362,11 +3362,9 @@ svg.usmap.zoomed{ overflow:hidden; }
   }
   if (regionSelectEl){
     regionSelectEl.addEventListener('change', function(){
-      if (isLockedMode('reverse')) { regionSelectEl.value = reverseRegion; openTrialLock(); return; }
       reverseRegion = regionSelectEl.value;
       applyRegionChange();
     });
-    if (isLockedMode('reverse')) regionSelectEl.disabled = true;
   }
   var prevRegionEl = document.getElementById('prevRegionBtn');
   var nextRegionEl = document.getElementById('nextRegionBtn');

@@ -3400,7 +3400,7 @@ var TRIVIA_DATA = {
   function isRegionFiltered(m) {
     return reverseRegion !== "all" && REGION_MODES.indexOf(m) !== -1;
   }
-  var lastRegionMode = "reverse";
+  var lastRegionMode = TRIAL_BUILD ? "reverseEasy" : "reverse";
   function clearRegionModeStates() {
     REGION_MODES.forEach(function (m) { delete allStates.states[m]; });
   }
@@ -3721,7 +3721,7 @@ var TRIVIA_DATA = {
       els.reverseRegionSelect.value = reverseRegion;
     }
     clearRegionModeStates();
-    startMode(REGION_MODES.indexOf(game.mode) !== -1 ? game.mode : "reverse", true);
+    startMode(REGION_MODES.indexOf(game.mode) !== -1 ? game.mode : lastRegionMode, true);
   }
 
   // ---------- 間違えやすい選択肢 ----------
@@ -4794,9 +4794,7 @@ var TRIVIA_DATA = {
     if (els.reverseRegionSelect) {
       els.reverseRegionSelect.value = reverseRegion;
       syncReverseRegionSelectStyle();
-      if (isLockedMode("reverse")) els.reverseRegionSelect.disabled = true;
       els.reverseRegionSelect.addEventListener("change", function () {
-        if (isLockedMode("reverse")) { openTrialLock(); return; }
         reverseRegion = els.reverseRegionSelect.value;
         try { localStorage.setItem("jpq_reverse_region_v1", reverseRegion); } catch (e) {}
         // Lv.4の出題範囲が変わるので、保存済みのLv.4の進捗は作り直す

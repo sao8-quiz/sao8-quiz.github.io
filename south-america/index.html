@@ -1055,16 +1055,16 @@ function populateRegionSelect(){
 }
 populateRegionSelect();
 els.reverseRegionSelect.addEventListener("change", function(){
-  if (isLockedMode("reverse")) { els.reverseRegionSelect.value = reverseRegion; openTrialLock(); return; }
   reverseRegion = els.reverseRegionSelect.value;
   save("saq_reverse_region_v1", reverseRegion);
   clearRegionModeStates();
   syncReverseRegionSelectStyle();
   if(REGION_MODES.indexOf(game.mode) !== -1){
     startMode(game.mode, true);
+  } else if (reverseRegion !== "all") {
+    startMode(isLockedMode(lastRegionMode) ? "reverseEasy" : lastRegionMode, true);
   }
 });
-if (isLockedMode("reverse")) els.reverseRegionSelect.disabled = true;
 syncReverseRegionSelectStyle();
 
 // ---------- choices ----------
